@@ -182,6 +182,9 @@ async function toggleListaDeDesejos(){
 
 // COLEÇÃO E LISTA DE DESEJOS /////////////////////////////////
 
+
+// AUTENTICAÇÃO E REGISTRO
+
 async function fazerLogin() {
     const email = document.getElementById('login-email').value;
     const senha = document.getElementById('login-senha').value;
@@ -293,6 +296,10 @@ async function registrarUsuario() {
 };
 
 
+// AUTENTICAÇÃO E REGISTRO
+
+
+// ÁREA DO USUÁRIO
 
 async function carregarDiscos(){
     try {
