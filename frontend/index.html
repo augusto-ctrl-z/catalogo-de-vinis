@@ -86,6 +86,15 @@
             <button onclick="fazerLogout()">Sair</button>
         </div>
 
+        <div class="card">
+                <input
+                type="text"
+                id="busca-disco"
+                placeholder="🔎 Buscar lançamentos..."
+                oninput="filtrarDiscos()"
+            >
+        </div>
+
         <div id="discos-lista"></div>
 
         <div id="avaliacao-area" style="display: none;" class="card">
@@ -127,7 +136,12 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script/auth.js"></script>
+    <script src="script/discos.js"></script>
+    <script src="script/colecaoWishlist.js"></script>
+    <script src="script/avaliacoes.js"></script>
+    <script src="script/admin.js"></script>
+    <script src="script/main.js"></script>
     
 </body>
 </html>

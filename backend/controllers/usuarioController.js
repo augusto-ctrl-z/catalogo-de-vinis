@@ -266,7 +266,7 @@ const adicionarNaColecao = async (req, res) => {
 // remover
 const removerDaColecao = async (req, res) => {
     try{
-        const { discoID } = req.body;
+        const { discoID } = req.params;
 
         if (!req.session.usuarioID){
             return res.status(401).json({ erro: 'Necessário que faça login para continuar' });
@@ -337,7 +337,7 @@ const adicionarDesejados = async (req, res) => {
 // remover da lista
 const removerDesejados = async (req, res) => {
     try {
-        const { discoID } = req.body;
+        const { discoID } = req.params;
 
         if (!req.session.usuarioID){
         return res.status(401).json({ erro: 'Necessário que faça login para continuar' });
