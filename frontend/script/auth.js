@@ -135,4 +135,9 @@ async function verificarSessao() {
         }
     }
     carregarDiscos();
-}
+};
+
+window.fazerLogin = fazerLogin;
+window.fazerLogout = fazerLogout;
+window.registrarUsuario = registrarUsuario;
+window.verificarSessao = verificarSessao;

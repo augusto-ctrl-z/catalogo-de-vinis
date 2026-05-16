@@ -102,3 +102,10 @@ async function deletarMinhaAvaliacao() {
         console.error('Erro', error);
     }
 };
+
+window.enviarAvaliacao = enviarAvaliacao;
+
+window.mostrarMinhaAvaliacao = mostrarMinhaAvaliacao;
+
+window.editarMinhaAvaliacao = editarMinhaAvaliacao;
+window.deletarMinhaAvaliacao = deletarMinhaAvaliacao;

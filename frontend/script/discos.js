@@ -144,4 +144,14 @@ async function mostrarDetalhesDisco(disco) {
     }
 };
 
+window.carregarDiscos = carregarDiscos;
+window.previewCapa = previewCapa;
+
+window.fecharDetalhes = fecharDetalhes;
 window.mostrarDetalhesDisco = mostrarDetalhesDisco;
+
+window.adicionarCampoFaixa = adicionarCampoFaixa;
+window.removerCampoFaixa = removerCampoFaixa;
+
+window.coletarFaixas = coletarFaixas;
+window.carregarFaixas = carregarFaixas;

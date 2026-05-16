@@ -231,3 +231,12 @@ async function toggleListaDeDesejos(){
         }
     }
 };
+
+window.adicionarColecao = adicionarColecao;
+window.adicionarListaDesejos = adicionarListaDesejos;
+
+window.carregarDesejos = carregarDesejos;
+window.carregarMinhaColecao = carregarMinhaColecao;
+
+window.toggleMinhaColecao = toggleMinhaColecao;
+window.toggleListaDeDesejos = toggleListaDeDesejos;

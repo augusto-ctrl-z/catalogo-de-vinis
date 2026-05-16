@@ -27,3 +27,11 @@ function converterImagemParaBase64(file) {
     });
 };
 
+window.usuarioLogado = null;
+window.discoSelecionado = null;
+
+window.colecaoAberta = false;
+window.listaAberta = false;
+
+window.API_URL = 'http://localhost:3000/api';
+

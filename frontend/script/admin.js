@@ -102,3 +102,11 @@ async function deletarDisco() {
         alert('Falha ao deletar disco');
     }
 };
+
+window.mostrarFormularioDisco = mostrarFormularioDisco;
+window.fecharFormulario = fecharFormulario;
+
+window.converterImagemParaBase64 = converterImagemParaBase64;
+
+window.adicionarDisco = adicionarDisco;
+window.deletarDisco = deletarDisco;
