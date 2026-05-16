@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Son Of The Damned Archives</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="banner">
+            <img src="eddie&vic.png" alt="Eddie Iron Maiden" class="banner-img">
+            <div class="banner-text">
+                <h1 class="banner-title">Son Of The Damned Archives</h1>
+            </div>
+        </div>
+
+        <div id="login-area" class="card">
+            <h2>Login</h2>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-senha" placeholder="Senha">
+            <button onclick="fazerLogin()">Entrar</button>
+            <p id="login-status"></p>
+        </div>
+
+        <div id="registro-area" class="card">
+            <h2>📝 Registrar</h2>
+            <input type="text" id="reg-nome" placeholder="Nome">
+            <input type="email" id="reg-email" placeholder="Email">
+            <input type="password" id="reg-senha" placeholder="Senha">
+            <button onclick="registrarUsuario()">Registrar-se</button>
+            <p id="registro-status"></p>
+        </div>
+
+        <div id="admin-actions" style="display: none;">
+        <h3>🔧 Ações de Administrador</h3>
+        <button onclick="mostrarFormularioDisco()">➕ Adicionar Disco</button>
+
+        <div id="form-disco" style="display: none; margin-top: 15px;">
+            <input type="text" id="disco-titulo" placeholder="Título">
+            <input type="text" id="disco-artista" placeholder="Artista">
+            <input type="number" id="disco-ano" placeholder="Ano">
+            <input type="text" id="disco-genero" placeholder="Gênero">
+            <input type="text" id="disco-gravadora" placeholder="Gravadora">
+
+            <div style="margin-bottom: 15px;">
+                <label>Capa do Disco:</label>
+                <input type="text" id="disco-capa-url" placeholder="URL da capa (ex: https://...)">
+                <div id="preview-capa" style="margin-top: 10px;">
+                    <img id="capa-preview-img" src="#" alt="Preview" style="max-width: 150px; max-height: 150px; display: none;">
+                </div>
+            </div>
+
+            <h4>💿 Faixas</h4>
+            <div id="faixas-container">
+                <div class="faixa-item" style="margin-bottom: 10px;">
+                    <input type="text" placeholder="Nome da faixa" class="faixa-nome" style="width: 60%;">
+                    <input type="text" placeholder="Duração (MM:SS)" class="faixa-duracao" style="width: 30%;">
+                </div>
+            </div>
+            <button type="button" onclick="adicionarCampoFaixa()">➕ Adicionar Faixa</button>
+
+            <button onclick="adicionarDisco()">💾 Salvar Disco</button>
+            <button onclick="fecharFormulario()">Cancelar</button>
+            <p id="disco-status"></p>
+        </div>
+    </div>
+
+        <div id="user-area" style="display: none;" class="card">
+            <p>Bem-vindo, <span id="user-nome"></span>!</p>
+            <button onclick="toggleMinhaColecao()">📀 Minha Coleção</button>
+            <button onclick="toggleListaDeDesejos()">💫 Lista De Desejos</button>
+
+            <div id="colecao-area" style="display: none;" class="card">
+                <h2>📀 Minha Coleção</h2>
+                <div id="minha-colecao-lista"></div>
+                <button onclick="toggleMinhaColecao()">Fechar</button>
+            </div>
+            <div id="meus-desejos-area" style="display: none;" class="card">
+                <h2>💫 Lista de Desejos</h2>
+                <div id="minha-lista-desejos"></div>
+                <button onclick="toggleListaDeDesejos()">Fechar</button>
+            </div>
+            
+
+            <button onclick="fazerLogout()">Sair</button>
+        </div>
+
+        <div id="discos-lista"></div>
+
+        <div id="avaliacao-area" style="display: none;" class="card">
+            <h2>⭐ Avaliar Disco</h2>
+            <button onclick="fecharDetalhes()" style="background-color: #600f1c;">Fechar</button>
+            <p id="avaliacao-disco-nome"></p>
+
+            <div id="admin-delete" style="display: none;">
+                <button onclick="deletarDisco()" style="background-color: #600f1c; color: white;">🗑️ Deletar Disco</button>
+            </div>
+
+            <div id="botoes-colecao" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button onclick="adicionarColecao()">📀 Adicionar à coleção</button>
+                <button onclick="adicionarListaDesejos()">💫 Adicionar à lista de desejos</button>
+            </div>
+
+            <select id="avaliacao-nota">
+                <option value="5">5 - Excelente</option>
+                <option value="4">4 - Muito Bom</option>
+                <option value="3">3 - Bom</option>
+                <option value="2">2 - Regular</option>
+                <option value="1">1 - Ruim</option>
+            </select>
+            <textarea id="avaliacao-comentario" placeholder="Seu comentário..."></textarea>
+
+            <select id="avaliacao-track">
+                <option value="">-- Nenhuma faixa específica --</option>
+            </select>
+
+            <button onclick="enviarAvaliacao()">Enviar Avaliação</button>
+            <p id="avaliacao-status"></p>
+
+            <div id="minha-avaliacao" style="display: none; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 15px;">
+                <h3>Sua avaliação:</h3>
+                <div id="minha-avaliacao-content"></div>
+                <button onclick="editarMinhaAvaliacao()">✏️ Editar</button>
+                <button onclick="deletarMinhaAvaliacao()">🗑️ Deletar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    
+</body>
+</html>
