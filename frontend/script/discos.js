@@ -153,5 +153,7 @@ window.mostrarDetalhesDisco = mostrarDetalhesDisco;
 window.adicionarCampoFaixa = adicionarCampoFaixa;
 window.removerCampoFaixa = removerCampoFaixa;
 
-window.coletarFaixas = coletarFaixas;
+window.renderizarDiscos = renderizarDiscos;
+window.filtrarDiscos = filtrarDiscos;
+
 window.carregarFaixas = carregarFaixas;

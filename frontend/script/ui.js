@@ -60,3 +60,13 @@ function fecharFormulario(){
     document.getElementById('form-disco').style.display = 'none';
     document.getElementById('disco-status').textContent = '';
 };
+
+window.coletarFaixas = coletarFaixas;
+window.adicionarCampoFaixa = adicionarCampoFaixa;
+window.removerCampoFaixa = removerCampoFaixa;
+window.carregarFaixas = carregarFaixas;
+
+window.mostrarFormularioDisco = mostrarFormularioDisco;
+window.fecharFormulario = fecharFormulario;
+
+window.coletarFaixas = coletarFaixas;
