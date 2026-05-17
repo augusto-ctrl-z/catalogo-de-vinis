@@ -94,11 +94,24 @@ const deletarDisco = async (req, res) => {
         if (!disco) {
             return res.status(404).json({ erro: 'Disco não encontrado' });
         }
+
+        await Usuario.updateMany(
+            {},
+            {
+                $pull: {
+                    colecao: req.params.id,
+                    desejados: req.params.id,
+                    avaliacoes: { discoID: req.params.id }
+                }
+            }
+        );
+
         await redisClient.del('discos:lista');
         await redisClient.zrem('ranking:discos', req.params.id);
         await redisClient.del(`disco:${req.params.id}:views`);
 
         res.json({ mensagem: 'Disco deletado com sucesso' });
+        
     } catch (error) {
         res.status(500).json({ erro: error.message });
     }

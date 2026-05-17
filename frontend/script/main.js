@@ -9,7 +9,7 @@ todosDiscos.sort((a, b) => b.averageRating - a.averageRating);
 let colecaoAberta = false;
 let listaAberta = false;
 
-verirficarSessao();
+//verirficarSessao();
 
 function converterImagemParaBase64(file) {
     return new Promise((resolve, reject) => {
@@ -34,4 +34,6 @@ window.colecaoAberta = false;
 window.listaAberta = false;
 
 window.API_URL = 'http://localhost:3000/api';
+
+window.verificarSessao = verificarSessao;
 

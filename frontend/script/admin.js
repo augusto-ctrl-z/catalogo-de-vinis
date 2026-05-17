@@ -91,7 +91,17 @@ async function deletarDisco() {
         if (response.ok) {
             alert('Disco deletado com sucesso!');
             document.getElementById('avaliacao-area').style.display = 'none';
-            carregarDiscos();
+
+            await carregarDiscos();
+
+            if (colecaoAberta) {
+                await carregarMinhaColecao();
+            }
+
+            if (listaAberta) {
+                await carregarDesejos();
+            }
+
             discoSelecionado = null;
         } else {
             const error = await response.json();
@@ -103,10 +113,10 @@ async function deletarDisco() {
     }
 };
 
-window.mostrarFormularioDisco = mostrarFormularioDisco;
-window.fecharFormulario = fecharFormulario;
+//window.mostrarFormularioDisco = mostrarFormularioDisco;
+//window.fecharFormulario = fecharFormulario;
 
-window.converterImagemParaBase64 = converterImagemParaBase64;
+//window.converterImagemParaBase64 = converterImagemParaBase64;
 
 window.adicionarDisco = adicionarDisco;
 window.deletarDisco = deletarDisco;

@@ -9,7 +9,7 @@ async function carregarDiscos(){
         renderizarDiscos(todosDiscos);
 
     } catch (error) {
-        console.error('Erro ao carregar discos:', error);
+        console.error('Falha ao carregar discos:', error);
     }
 };
 
@@ -67,7 +67,7 @@ function renderizarDiscos(discos) {
 
         container.appendChild(div);
     })
-}
+};
 
 function filtrarDiscos() {
     const termo = document.getElementById('busca-disco')
@@ -81,7 +81,7 @@ function filtrarDiscos() {
     );
 
     renderizarDiscos(discosFiltrados);
-}
+};
 
 async function mostrarDetalhesDisco(disco) {
     discoSelecionado = disco;
@@ -126,21 +126,30 @@ async function mostrarDetalhesDisco(disco) {
         }
     }
 
+    const avaliacaoStatus = document.getElementById('avaliacao-status');
+    avaliacaoStatus.innerHTML = '';
 
     if (avaliacoesData.avaliacoes && avaliacoesData.avaliacoes.length > 0) {
-        let avaliacoesHtml = '<h3> Seção de avaliações:</h3>';
+
+        let avaliacoesHtml = '<h3>Avaliações:</h3>';
+
         avaliacoesData.avaliacoes.forEach(av => {
             avaliacoesHtml += `
             <div class="avaliacao">
                 <strong>${av.usuario}</strong> - Nota ${av.nota} ⭐<br><br>
-                <strong>💿 Faixa favorita: ${av.trackFavorita || 'Nenhuma'}
+                <strong>💿 Faixa favorita: ${av.trackFavorita || 'Nenhuma'}</strong>
                 <p>${av.comentario || ''}</p>
             </div>
             `;
         });
-        document.getElementById('avaliacao-status').innerHTML = avaliacoesHtml;
+        
+        avaliacaoStatus.innerHTML = avaliacoesHtml;
 
         mostrarMinhaAvaliacao(avaliacoesData.avaliacoes, usuarioLogado);
+    } else {
+        avaliacaoStatus.innerHTML = '<p>Nenhuma avaliação ainda</p>'
+
+        document.getElementById('minha-avaliacao').style.display = 'none';
     }
 };
 
@@ -150,10 +159,11 @@ window.previewCapa = previewCapa;
 window.fecharDetalhes = fecharDetalhes;
 window.mostrarDetalhesDisco = mostrarDetalhesDisco;
 
-window.adicionarCampoFaixa = adicionarCampoFaixa;
-window.removerCampoFaixa = removerCampoFaixa;
+//window.adicionarCampoFaixa = adicionarCampoFaixa;
+//window.removerCampoFaixa = removerCampoFaixa;
 
 window.renderizarDiscos = renderizarDiscos;
 window.filtrarDiscos = filtrarDiscos;
 
-window.carregarFaixas = carregarFaixas;
+//window.carregarFaixas = carregarFaixas;
+//window.mostrarBusca = mostrarBusca;
