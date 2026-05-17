@@ -70,7 +70,8 @@ async function carregarMinhaColecao(){
         const discos = await response.json();
 
         const container = document.getElementById('minha-colecao-lista');
-        container.innerHTML = '';
+        container.innerHTML = '<p>Nenhum disco adicionado ainda</p>';
+
         discos.forEach(disco => {
             const div = document.createElement('div');
             div.className = 'colecao-item';
@@ -110,7 +111,8 @@ async function carregarDesejos(){
         const discos = await response.json();
 
         const container = document.getElementById('minha-lista-desejos');
-        container.innerHTML = '';
+        container.innerHTML = '<p>Nenhum disco adicionado ainda</p>';
+        
         discos.forEach(disco => {
             const div = document.createElement('div');
             div.className = 'desejados-item';
