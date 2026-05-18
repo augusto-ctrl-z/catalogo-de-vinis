@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const discoController = require('../controllers/discoController');
 
-// ranking de videos
-router.get('/ranking/views', discoController.rankingDiscos);
-router.get('/teste', (req, res) => {
-    res.json({ mensagem: 'rota funcionando' });
-});
+
 
 router.get('/', discoController.listarDiscos);
+
+// ranking 10 mais acessados
+router.get('/ranking', discoController.rankingDiscos);
+
 router.get('/:id', discoController.buscaDiscoID);
 router.post('/', discoController.criarDisco);
 router.put('/:id', discoController.atualizarDisco);

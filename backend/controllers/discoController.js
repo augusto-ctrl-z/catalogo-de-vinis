@@ -21,24 +21,35 @@ const buscaDiscoID = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // incremento
-        const views = await redisClient.incr(`disco:${id}:views`)
+        const userId = req.session.usuarioID || req.ip;
+        const key = `view:${userId}:${id}`;
 
-        //zadd adiciona ou atualiza um item no ranking ordenado
-        await redisClient.zadd('ranking:discos', views, id.toString());
+        let views;
 
-        //pede o parametro do id pra buscar
+        alreadyViewed = await redisClient.get(key);
+
+        /*if (!alreadyViewed) {
+            views = await redisClient.incr(`discos:${id}:views`);
+
+            await redisClient.zadd('ranking:discos', views, id.toString());
+
+            //marca como visto 24h
+            await redisClient.set(key, 1, 'EX', 60 * 60 * 24);
+        } else {
+            views = await redisClient.get(`disco:${id}:views`);
+        }*/
+
         const disco = await Disco.findById(id);
+
         if (!disco) {
-            return res.status(404).json({ erro: 'Disco não encontrado'});
+            return res.status(404).json({ erro: 'Disco não encontrado' });
         }
 
-        //Retorna o disco + o contador de views
         res.json({
             ...disco.toObject(),
-            visualizacaoEmTempoReal: views
+            visualizacaoEmTempoReal: Number(views)
         });
-    
+
     } catch (error){
         res.status(500).json({ erro: error.message });
     }
@@ -117,55 +128,36 @@ const deletarDisco = async (req, res) => {
     }
 };
 
-// Top 10 mais vistos
 const rankingDiscos = async (req, res) => {
     try {
-        // busca os top 10 ids e poe os nomes na lista
         const rankingIDs = await redisClient.zrevrange(
             'ranking:discos',
             0,
             9,
-            'WITHSCORES'
         );
 
-        // Se não tiver nenhum no ranking
-        if (rankingIDs.length === 0) {
-            return res.json({ mensagem: 'Nenhuma visualização ainda'})
+        let discos = []
+
+        if (rankingIDs.length > 0) {
+            discos = await Disco.find({
+                _id: { $in: rankingIDs }
+            });
+
+            discos = rankingIDs
+            .map(id => discos.find(d => d,_id.toString() === id))
+            .filter(Boolean);
         }
-///////////////////////////////////////////////////////////////////////
-const ids = [];
-const scoresMap = {};
 
-for (let i = 0; i < rankingIDs.length; i += 2) {
-    const id = rankingIDs[i];
-    const score = parseInt(rankingIDs[i + 1]);
+        if (discos.lenght < 10){
+            const extras = await Disco.find()
+                .sort({ createdAt: -1 })
+                .limit(10 - discos.length);
 
-    if (mongoose.Types.ObjectId.isValid(id)) {
-        ids.push(id);
-        scoresMap[id] = score;
-    }
-}
+            discos = [...discos, ...extras];
+        }
 
-const discos = await Disco.find({ _id: { $in: ids } });
+        res.json(discos);
 
-const discosMap = {};
-
-discos.forEach(d => {
-    discosMap[d._id.toString()] = d;
-});
-
-const resultado = ids.map(id => {
-    const disco = discosMap[id]
-    if (!disco) return null;
-
-    return {
-        disco,
-        visualizacoes: scoresMap[id]
-    };
-}).filter(Boolean);
-///////////////////////////////////////////////////////////////////////
-
-        res.json(resultado);
     } catch (error) {
         res.status(500).json({ erro: error.message });
     }
@@ -177,5 +169,5 @@ module.exports = {
     criarDisco,
     atualizarDisco,
     deletarDisco,
-    rankingDiscos,
+    rankingDiscos
 };

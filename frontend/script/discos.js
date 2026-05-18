@@ -153,6 +153,32 @@ async function mostrarDetalhesDisco(disco) {
     }
 };
 
+function renderizarRanking(discos) {
+    const container = document.getElementById('ranking-lista');
+    container.innerHTML = '';
+
+    discos.forEach(item => {
+        const disco = item.disco || item;
+
+        const div = document.createElement('div');
+        div.className = 'disco-item';
+
+        div.innerHTML = `
+        <strong>${disco.titulo}</strong>
+        <p>${disco.artista}</p>
+        `;
+
+        container.appendChild(div);
+    })
+}
+
+async function carregarRanking() {
+    const res = await fetch(`${API_URL}/discos/ranking`);
+    const discos = await res.json();
+
+    renderizarRanking(discos);
+}
+
 window.carregarDiscos = carregarDiscos;
 window.previewCapa = previewCapa;
 
