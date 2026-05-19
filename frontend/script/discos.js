@@ -6,6 +6,10 @@ async function carregarDiscos(){
         const response = await fetch(`${API_URL}/discos`);
         todosDiscos = await response.json();
 
+        todosDiscos.sort(
+            (a, b) => (b.averageRating || 0) - (a.averageRating || 0)
+        );
+
         renderizarDiscos(todosDiscos);
 
     } catch (error) {
@@ -84,15 +88,20 @@ function filtrarDiscos() {
 };
 
 async function mostrarDetalhesDisco(disco) {
-    discoSelecionado = disco;
+    const response = await fetch(`${API_URL}/discos/${disco._id}`);
+
+    const discoAtualizado = await response.json();
+
+    discoSelecionado = discoAtualizado;
 
     await carregarFaixas(disco._id);
 
     // Busca avaliações do disco escolhido
-    const response = await fetch(`${API_URL}/usuarios/avaliacoes/${disco._id}`, {
+    const avaliacoesResponse = await fetch(`${API_URL}/usuarios/avaliacoes/${disco._id}`, {
         credentials: 'include'
     });
-    const avaliacoesData = await response.json();
+
+    const avaliacoesData = await avaliacoesResponse.json();
 
     // mostra a area de avaliação
     const avaliacaoArea = document.getElementById('avaliacao-area');
@@ -146,11 +155,15 @@ async function mostrarDetalhesDisco(disco) {
         avaliacaoStatus.innerHTML = avaliacoesHtml;
 
         mostrarMinhaAvaliacao(avaliacoesData.avaliacoes, usuarioLogado);
+
+        
     } else {
         avaliacaoStatus.innerHTML = '<p>Nenhuma avaliação ainda</p>'
 
         document.getElementById('minha-avaliacao').style.display = 'none';
     }
+
+    await carregarRanking();
 };
 
 function renderizarRanking(discos) {
@@ -162,6 +175,7 @@ function renderizarRanking(discos) {
 
         const div = document.createElement('div');
         div.className = 'disco-item';
+        div.onclick = () => mostrarDetalhesDisco(disco);
 
         div.innerHTML = `
         <strong>${disco.titulo}</strong>

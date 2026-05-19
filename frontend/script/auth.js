@@ -15,9 +15,9 @@ async function fazerLogin() {
 
         if (response.ok) { // se der certo
             usuarioLogado = data.usuario;
+            window.usuarioLogado = usuarioLogado;
 
-            console.log('Usuario logado:', usuarioLogado);
-            console.log('Permissão de admin:', usuarioLogado.isAdmin);
+            console.log('LOGIN REALIZADO!');
 
             // tira a tela de login e põe a de usuario
             document.getElementById('login-area').style.display = 'none';
@@ -38,7 +38,9 @@ async function fazerLogin() {
                 }
             }
 
-            carregarDiscos(); // carrega a lista de discos
+            await carregarDiscos();
+            await carregarRanking();
+
         } else {
             document.getElementById('login-status').textContent = data.erro;
         }
@@ -58,6 +60,8 @@ async function fazerLogout() {
 
         if (response.ok) {
             usuarioLogado = null;
+            window.usuarioLogado = null;
+
             document.getElementById('login-area').style.display = 'block';
             document.getElementById('user-area').style.display = 'none';
             document.getElementById('registro-area').style.display = 'block';
@@ -117,6 +121,9 @@ async function verificarSessao() {
     if (data.logado) {
         // Se já estiver logado, mostrará a área do usuário
         usuarioLogado = { id: data.usuarioID, nome: data.usuarioNome, isAdmin: data.isAdmin || false };
+
+        window.usuarioLogado = usuarioLogado;
+
         document.getElementById('login-area').style.display = 'none';
         document.getElementById('registro-area').style.display = 'none';
         document.getElementById('user-area').style.display = 'block';
@@ -134,7 +141,6 @@ async function verificarSessao() {
             }
         }
     }
-    carregarDiscos();
 };
 
 window.fazerLogin = fazerLogin;

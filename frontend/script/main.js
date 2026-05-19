@@ -4,7 +4,6 @@ let usuarioLogado = null;
 let discoSelecionado = null;
 let todosDiscos = [];
 
-todosDiscos.sort((a, b) => b.averageRating - a.averageRating);
 
 let colecaoAberta = false;
 let listaAberta = false;
@@ -35,5 +34,11 @@ window.listaAberta = false;
 
 window.API_URL = 'http://localhost:3000/api';
 
-window.verificarSessao = verificarSessao;
+
+window.onload = async () => {
+    await verificarSessao();
+
+    await carregarDiscos();
+    await carregarRanking();
+}
 

@@ -26,9 +26,9 @@ const buscaDiscoID = async (req, res) => {
 
         let views;
 
-        alreadyViewed = await redisClient.get(key);
+        const alreadyViewed = await redisClient.get(key);
 
-        /*if (!alreadyViewed) {
+        if (!alreadyViewed) {
             views = await redisClient.incr(`discos:${id}:views`);
 
             await redisClient.zadd('ranking:discos', views, id.toString());
@@ -36,8 +36,8 @@ const buscaDiscoID = async (req, res) => {
             //marca como visto 24h
             await redisClient.set(key, 1, 'EX', 60 * 60 * 24);
         } else {
-            views = await redisClient.get(`disco:${id}:views`);
-        }*/
+            views = await redisClient.get(`discos:${id}:views`);
+        }
 
         const disco = await Disco.findById(id);
 
@@ -59,7 +59,11 @@ const buscaDiscoID = async (req, res) => {
 const criarDisco = async (req, res) => {
     try {
         const disco = new Disco(req.body);
+
         await disco.save();
+
+        await redisClient.zadd('ranking:discos', 0, disco._id.toString());
+
         await redisClient.del('discos:lista');
         res.status(201).json(disco);
     } catch (error) {
@@ -118,8 +122,8 @@ const deletarDisco = async (req, res) => {
         );
 
         await redisClient.del('discos:lista');
-        await redisClient.zrem('ranking:discos', req.params.id);
-        await redisClient.del(`disco:${req.params.id}:views`);
+        await redisClient.zrem('ranking:discos', req.params.id.toString());
+        await redisClient.del(`discos:${req.params.id}:views`);
 
         res.json({ mensagem: 'Disco deletado com sucesso' });
         
@@ -130,28 +134,45 @@ const deletarDisco = async (req, res) => {
 
 const rankingDiscos = async (req, res) => {
     try {
+
+        // pega ids do ranking no Redis
         const rankingIDs = await redisClient.zrevrange(
             'ranking:discos',
             0,
-            9,
+            9
         );
 
-        let discos = []
+        let discos = [];
 
+        // se existir ranking
         if (rankingIDs.length > 0) {
-            discos = await Disco.find({
+
+            const discosMongo = await Disco.find({
                 _id: { $in: rankingIDs }
             });
 
+            // mantém ordem do Redis
             discos = rankingIDs
-            .map(id => discos.find(d => d,_id.toString() === id))
-            .filter(Boolean);
+                .map(id =>
+                    discosMongo.find(
+                        d => d._id.toString() === id
+                    )
+                )
+                .filter(Boolean);
         }
 
-        if (discos.lenght < 10){
-            const extras = await Disco.find()
-                .sort({ createdAt: -1 })
-                .limit(10 - discos.length);
+        // completa com discos recentes se tiver menos de 10
+        if (discos.length < 10) {
+
+            const idsExistentes = discos.map(
+                d => d._id.toString()
+            );
+
+            const extras = await Disco.find({
+                _id: { $nin: idsExistentes }
+            })
+            .sort({ createdAt: -1 })
+            .limit(10 - discos.length);
 
             discos = [...discos, ...extras];
         }
@@ -159,7 +180,12 @@ const rankingDiscos = async (req, res) => {
         res.json(discos);
 
     } catch (error) {
-        res.status(500).json({ erro: error.message });
+
+        console.error('ERRO RANKING:', error);
+
+        res.status(500).json({
+            erro: error.message
+        });
     }
 };
 
