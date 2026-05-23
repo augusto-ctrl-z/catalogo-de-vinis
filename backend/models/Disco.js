@@ -42,6 +42,12 @@ const discoSchema = new mongoose.Schema({
             duracao: { type: String } // minutagem -> MM:SS
         }
     ],
+
+    averageRating: {
+        type: Number,
+        default: 0
+    },
+
     createdAt: {
         type: Date,
         default: Date.now

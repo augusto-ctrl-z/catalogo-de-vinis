@@ -21,7 +21,7 @@ const calcularNotaDisco = async (discoID) => {
             // se a avaliação for do mesmo disco do id requisitado
             if (avaliacao.discoID.toString() === discoID) {
                 // soma a nota
-                soma += avaliacao.nota;
+                soma += Number(avaliacao.nota);
                 // incrementa o total de avaliações
                 total++;
             }
@@ -400,6 +400,7 @@ const login = async (req, res) => {
         // salva na sessão como usuário logado
         req.session.usuarioID = usuario._id;
         req.session.usuarioNome = usuario.nome;
+        req.session.isAdmin = usuario.isAdmin || false;
 
         res.json({
             mensagem: 'Login realizado com sucesso',

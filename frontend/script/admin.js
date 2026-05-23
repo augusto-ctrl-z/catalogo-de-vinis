@@ -93,6 +93,7 @@ async function deletarDisco() {
             document.getElementById('avaliacao-area').style.display = 'none';
 
             await carregarDiscos();
+            await carregarRanking();
 
             if (colecaoAberta) {
                 await carregarMinhaColecao();

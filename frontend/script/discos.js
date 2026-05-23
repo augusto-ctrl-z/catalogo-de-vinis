@@ -15,6 +15,7 @@ async function carregarDiscos(){
     } catch (error) {
         console.error('Falha ao carregar discos:', error);
     }
+    await carregarRanking();
 };
 
 function previewCapa(event) {
@@ -88,13 +89,14 @@ function filtrarDiscos() {
 };
 
 async function mostrarDetalhesDisco(disco) {
+    console.log('MOSTRAR DETALHES');
     const response = await fetch(`${API_URL}/discos/${disco._id}`);
 
     const discoAtualizado = await response.json();
 
     discoSelecionado = discoAtualizado;
 
-    await carregarFaixas(disco._id);
+    await carregarFaixas(discoAtualizado);
 
     // Busca avaliações do disco escolhido
     const avaliacoesResponse = await fetch(`${API_URL}/usuarios/avaliacoes/${disco._id}`, {
@@ -113,12 +115,12 @@ async function mostrarDetalhesDisco(disco) {
             <img src="${disco.capaUrl || 'https://via.placeholder.com/300x300?text=Sem+Capa'}" 
                  style="width: 300px; height: 300px; object-fit: cover; border-radius: 8px; border: 1px solid #600f1c;">
             <div>
-                <h3 style="margin: 0 0 10px 0;">${disco.titulo}</h3>
-                <p><strong>Artista:</strong> ${disco.artista}</p>
-                <p><strong>Ano:</strong> ${disco.ano}</p>
-                <p><strong>Gênero:</strong> ${disco.genero?.join(', ') || 'N/A'}</p>
-                <p><strong>Gravadora:</strong> ${disco.gravadora || 'N/A'}</p>
-                <p><strong>Avaliação média:</strong> ${disco.averageRating || 0} ⭐</p>
+                <h3 style="margin: 0 0 10px 0;">${discoAtualizado.titulo}</h3>
+                <p><strong>Artista:</strong> ${discoAtualizado.artista}</p>
+                <p><strong>Ano:</strong> ${discoAtualizado.ano}</p>
+                <p><strong>Gênero:</strong> ${discoAtualizado.genero?.join(', ') || 'N/A'}</p>
+                <p><strong>Gravadora:</strong> ${discoAtualizado.gravadora || 'N/A'}</p>
+                <p><strong>Avaliação média:</strong> ${discoAtualizado.averageRating || 0} ⭐</p>
             </div>
         </div>
     `;

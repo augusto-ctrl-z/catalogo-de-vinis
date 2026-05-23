@@ -1,10 +1,13 @@
+process.on('uncaughtException', (err) => {
+    console.error('ERRO COMPLETO:', err);
+});
+
 // imports
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const session = require('express-session');
-const RedisStore = require('connect-redis')(session);
 
 // import do redis
 const redisClient = require('./config/redis');
@@ -30,15 +33,15 @@ app.use(cors({
 })); // libera acesso para o front
 app.use(express.json()); // permite receber json nas requisições
 
-// config da sessão redis
+// config de sessão
 app.use(session({
-    store: new RedisStore({ client: redisClient }), // onde tudo será guardado
-    secret: process.env.SESSION_SECRET || 'fallback-secreto-demais-teste',
-    resave: false, // não salva nada se não tiver alteração
-    saveUninitialized: false, // não cria sessão anônima
+    secret: 'segredo',
+    resave: false,
+    saveUninitialized: false,
     cookie: {
-        maxAge: 24 * 60 * 60 * 1000, // 24 horas de duração máxima
-        httpOnly: true // só HTTP por segurança
+        secure: false,
+        httpOnly: true,
+        sameSite: 'lax'
     }
 }));
 

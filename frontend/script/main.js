@@ -8,8 +8,6 @@ let todosDiscos = [];
 let colecaoAberta = false;
 let listaAberta = false;
 
-//verirficarSessao();
-
 function converterImagemParaBase64(file) {
     return new Promise((resolve, reject) => {
 

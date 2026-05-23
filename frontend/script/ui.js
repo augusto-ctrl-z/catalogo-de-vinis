@@ -31,26 +31,31 @@ function coletarFaixas() {
     return faixas;
 }
 
-async function carregarFaixas(discoID) {
-    try {
-        const response = await fetch(`${API_URL}/discos/${discoID}`);
-        const disco = await response.json();
+async function carregarFaixas(disco) {
 
-        const trackSelect = document.getElementById('avaliacao-track');
-        trackSelect.innerHTML = '<option value="">-- Nenhuma faixa específica --</option>';
+    const trackSelect = document.getElementById('avaliacao-track');
 
-        if (disco.faixas && disco.faixas.length > 0) {
-            disco.faixas.forEach(faixa => {
-                const option = document.createElement('option');
-                option.value = faixa._id;
-                option.textContent = `${faixa.nome} (${faixa.duracao || '?'})`;
-                trackSelect.appendChild(option);
-            });
-        } 
-     } catch (error) {
-            console.error('Erro ao carregar faixas:', error);
-     }
-};
+    trackSelect.innerHTML = `
+        <option value="">
+            -- Nenhuma faixa especifica --
+        </option>
+    `;
+
+    if (disco.faixas && disco.faixas.length > 0) {
+
+        disco.faixas.forEach(faixa => {
+
+            const option = document.createElement('option');
+
+            option.value = faixa._id;
+
+            option.textContent =
+                `${faixa.nome} (${faixa.duracao || '?'})`;
+
+            trackSelect.appendChild(option);
+        })
+    }
+}
 
 function mostrarFormularioDisco() {
     document.getElementById('form-disco').style.display = 'block';

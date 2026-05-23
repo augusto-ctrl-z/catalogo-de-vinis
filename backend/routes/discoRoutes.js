@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const discoController = require('../controllers/discoController');
+const isAdmin = require('../middlewares/isAdmin');
 
 
 
@@ -10,8 +11,8 @@ router.get('/', discoController.listarDiscos);
 router.get('/ranking', discoController.rankingDiscos);
 
 router.get('/:id', discoController.buscaDiscoID);
-router.post('/', discoController.criarDisco);
-router.put('/:id', discoController.atualizarDisco);
-router.delete('/:id', discoController.deletarDisco);
+router.post('/', isAdmin, discoController.criarDisco);
+router.put('/:id', isAdmin, discoController.atualizarDisco);
+router.delete('/:id', isAdmin, discoController.deletarDisco);
 
 module.exports = router;

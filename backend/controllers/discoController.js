@@ -21,23 +21,15 @@ const buscaDiscoID = async (req, res) => {
     try {
         const { id } = req.params;
 
-        const userId = req.session.usuarioID || req.ip;
-        const key = `view:${userId}:${id}`;
 
-        let views;
+        let views = await redisClient.incr(`discos:${id}:views`);
 
-        const alreadyViewed = await redisClient.get(key);
-
-        if (!alreadyViewed) {
-            views = await redisClient.incr(`discos:${id}:views`);
-
-            await redisClient.zadd('ranking:discos', views, id.toString());
-
-            //marca como visto 24h
-            await redisClient.set(key, 1, 'EX', 60 * 60 * 24);
-        } else {
-            views = await redisClient.get(`discos:${id}:views`);
-        }
+        await redisClient.zAdd('ranking:discos', [
+            {
+                score: Number(views),
+                value: id.toString()
+            }
+        ]);
 
         const disco = await Disco.findById(id);
 
@@ -58,11 +50,28 @@ const buscaDiscoID = async (req, res) => {
 // Criar novo disco
 const criarDisco = async (req, res) => {
     try {
+
+        if (!req.session.usuarioID) {
+            return res.status(401).json({ erro: 'Não logado' });
+        }
+
+        const usuario = await Usuario.findById(req.session.usuarioID);
+
+        if(!usuario || !usuario.isAdmin) {
+            return res.status(403).json({ erro: 'Somente admin'})
+        }
+
         const disco = new Disco(req.body);
 
         await disco.save();
 
-        await redisClient.zadd('ranking:discos', 0, disco._id.toString());
+        await redisClient.zAdd('ranking:discos', [
+            {
+                score: 0,
+                value: disco._id.toString()
+            }
+        ]
+        );
 
         await redisClient.del('discos:lista');
         res.status(201).json(disco);
@@ -92,6 +101,9 @@ const atualizarDisco = async (req, res) => {
 // Deletar disco
 const deletarDisco = async (req, res) => {
     try {
+
+        console.log('SESSION:', req.session);
+        console.log('USER ID:', req.session.usuarioID);
         
         const usuario = await Usuario.findById(req.session.usuarioID);
 
@@ -122,7 +134,7 @@ const deletarDisco = async (req, res) => {
         );
 
         await redisClient.del('discos:lista');
-        await redisClient.zrem('ranking:discos', req.params.id.toString());
+        await redisClient.zRem('ranking:discos', req.params.id.toString());
         await redisClient.del(`discos:${req.params.id}:views`);
 
         res.json({ mensagem: 'Disco deletado com sucesso' });
@@ -136,10 +148,13 @@ const rankingDiscos = async (req, res) => {
     try {
 
         // pega ids do ranking no Redis
-        const rankingIDs = await redisClient.zrevrange(
+        const rankingIDs = await redisClient.zRange(
             'ranking:discos',
             0,
-            9
+            9,
+            {
+                REV: true
+            }
         );
 
         let discos = [];
@@ -188,6 +203,8 @@ const rankingDiscos = async (req, res) => {
         });
     }
 };
+
+
 
 module.exports = {
     listarDiscos,
